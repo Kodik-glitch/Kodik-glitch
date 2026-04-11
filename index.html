@@ -1,9 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Мой сайт на GitHub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Web IDE</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.11.2/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython_stdlib.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-main: #0A192F; /* Темно-синий фон */
+            --bg-panel: #112240; /* Фон панелей */
+            --text-main: #CCD6F6; /* Светлый текст */
+            --accent: #4A90E2; /* Голубой акцент */
+            --accent-hover: #357ABD;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: var(--bg-panel);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .btn-run {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-run:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: var(--bg-panel);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar h2 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .doc-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .doc-item code {
+            display: block;
+            background: #000;
+            padding: 5px;
+            margin-top: 5px;
+            border-radius: 3px;
+            color: #4CAF50;
+            font-family: monospace;
+        }
+
+        .editor-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #editor {
+            flex: 2;
+            font-size: 16px;
+        }
+
+        .output-section {
+            flex: 1;
+            background-color: #020c1b;
+            padding: 15px;
+            border-top: 2px solid var(--bg-panel);
+            overflow-y: auto;
+        }
+
+        .output-section h3 {
+            margin-bottom: 10px;
+            color: #8892b0;
+        }
+
+        #output {
+            font-family: monospace;
+            white-space: pre-wrap;
+            color: #a8b2d1;
+        }
+    </style>
 </head>
-<body>
-    <h1>Привет, мир! Мой сайт работает.</h1>
+<body onload="brython()">
+
+    <header>
+        <h1>Python Web IDE</h1>
+        <button class="btn-run" id="run-btn">▶ Запустить код</button>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Справочник Python</h2>
+            
+            <div class="doc-item">
+                <strong>Вывод текста</strong>
+                <code>print("Hello, World!")</code>
+            </div>
+            
+            <div class="doc-item">
+                <strong>Переменные и математика</strong>
+                <code>a = 5<br>b = 10<br>print(a + b)</code>
+            </div>
+
+            <div class="doc-item">
+                <strong>Условия (if/else)</strong>
+                <code>age = 18<br>if age >= 18:<br>&nbsp;&nbsp;print("Доступ открыт")<br>else:<br>&nbsp;&nbsp;print("Рано!")</code>
+            </div>
+
+            <div class="doc-item">
+                <strong>Цикл For</strong>
+                <code>for i in range(3):<br>&nbsp;&nbsp;print(i)</code>
+            </div>
+
+            <div class="doc-item">
+                <strong>Функции</strong>
+                <code>def greet(name):<br>&nbsp;&nbsp;return f"Hi, {name}"<br>print(greet("Bob"))</code>
+            </div>
+            
+            </div>
+
+        <div class="editor-section">
+            <div id="editor"># Напиши свой Python код здесь
+print("Добро пожаловать в Python Web IDE!")
+
+def calculate_area(radius):
+    pi = 3.14159
+    return pi * (radius ** 2)
+
+print(f"Площадь круга с радиусом 5: {calculate_area(5)}")
+</div>
+            <div class="output-section">
+                <h3>Консоль вывода:</h3>
+                <pre id="output"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow_night_eighties");
+        editor.session.setMode("ace/mode/python");
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true
+        });
+        window.editor = editor; // делаем доступным для Brython
+    </script>
+
+    <script type="text/python">
+        from browser import document, window
+        import sys
+        import traceback
+
+        def run_code(ev):
+            # Очищаем консоль
+            document["output"].text = ""
+            
+            # Перехватываем стандартный вывод (print)
+            class MyOutput:
+                def write(self, data):
+                    document["output"].text += str(data)
+            
+            sys.stdout = MyOutput()
+            sys.stderr = MyOutput()
+            
+            # Получаем код из редактора
+            src = window.editor.getValue()
+            
+            # Выполняем код
+            try:
+                exec(src, {})
+            except Exception as exc:
+                traceback.print_exc(file=sys.stderr)
+
+        document["run-btn"].bind("click", run_code)
+    </script>
 </body>
 </html>
