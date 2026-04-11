@@ -3,284 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Dark Learning IDE</title>
+    <title>Python Academy Studio Pro</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.11.2/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython_stdlib.min.js"></script>
     
     <style>
-        /* Палитра: Black & Neon Blue */
         :root {
-            --bg-black: #000000;
-            --bg-dark-blue: #020b1a;
-            --accent-blue: #007bff;
-            --neon-blue: #00f2ff;
-            --text-gray: #a0a0a0;
-            --text-white: #e0e0e0;
-            --border-color: #003366;
+            --bg-deep: #020408;
+            --bg-surface: #0a0f1d;
+            --accent-glow: #0070f3;
+            --neon-cyan: #00d4ff;
+            --glass: rgba(15, 23, 42, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background-color: var(--bg-black);
-            color: var(--text-white);
+            background-color: var(--bg-deep);
+            color: #e2e8f0;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Шапка сайта */
+        /* Навигация Studio Pro */
         header {
-            height: 60px;
-            background: linear-gradient(90deg, #000 0%, #001a33 100%);
+            height: 70px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 25px;
-            border-bottom: 2px solid var(--accent-blue);
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-            z-index: 10;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
         }
 
-        header h1 {
-            color: var(--neon-blue);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: linear-gradient(to right, #0070f3, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
         }
 
-        .run-button {
-            background-color: transparent;
-            color: var(--neon-blue);
-            border: 2px solid var(--neon-blue);
-            padding: 8px 25px;
-            font-weight: bold;
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn-execute {
+            background: linear-gradient(135deg, #0070f3 0%, #0051af 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            border-radius: 4px;
-            transition: 0.3s;
-            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
         }
 
-        .run-button:hover {
-            background-color: var(--neon-blue);
-            color: var(--bg-black);
-            box-shadow: 0 0 20px var(--neon-blue);
+        .btn-execute:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 118, 255, 0.5);
         }
 
-        /* Основной контейнер */
-        .main-layout {
+        /* Рабочая область */
+        .app-container {
             display: flex;
             flex: 1;
             overflow: hidden;
+            padding: 10px;
+            gap: 10px;
         }
 
-        /* Левая панель - Учебник */
-        .tutorial-sidebar {
-            width: 380px;
-            background-color: var(--bg-dark-blue);
-            border-right: 1px solid var(--border-color);
+        /* Сайдбар с уроками */
+        .academy-sidebar {
+            width: 400px;
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        .sidebar-header {
-            padding: 20px;
-            background: rgba(0, 123, 255, 0.1);
-            border-bottom: 1px solid var(--border-color);
+        .sidebar-nav {
+            padding: 25px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border);
         }
 
-        .sidebar-header h2 {
-            color: var(--neon-blue);
-            font-size: 1.1rem;
+        .sidebar-nav h2 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
         }
 
-        .tutorial-content {
+        .sidebar-nav p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .lesson-list {
             flex: 1;
             overflow-y: auto;
-            padding: 15px;
+            padding: 20px;
         }
 
-        .lesson-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 20px;
+        .lesson-node {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            transition: 0.2s;
         }
 
-        .lesson-card h3 {
-            color: var(--accent-blue);
+        .lesson-node:hover {
+            border-color: var(--accent-glow);
+            background: rgba(0, 112, 243, 0.05);
+        }
+
+        .lesson-node h4 {
+            color: var(--neon-cyan);
             margin-bottom: 8px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .lesson-card p {
+        .lesson-node p {
             font-size: 0.85rem;
-            color: var(--text-gray);
-            margin-bottom: 10px;
             line-height: 1.5;
+            color: #94a3b8;
         }
 
-        .lesson-card code {
-            display: block;
+        /* Секция кода */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #editor-surface {
+            flex: 2;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .terminal-container {
+            flex: 1;
             background: #000;
-            padding: 8px;
-            color: #4da6ff;
-            font-size: 0.85rem;
-            border-radius: 4px;
-            border: 1px solid #002244;
-        }
-
-        /* Правая часть - Редактор и Консоль */
-        .editor-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg-black);
-        }
-
-        #code-editor {
-            flex: 1.5;
-            font-size: 15px;
-        }
-
-        .console-area {
-            flex: 1;
-            border-top: 2px solid var(--accent-blue);
-            background-color: #000;
+            border-radius: 16px;
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
         }
 
-        .console-header {
-            padding: 8px 15px;
-            background: #051020;
-            font-size: 0.8rem;
-            color: var(--accent-blue);
+        .terminal-header {
+            padding: 12px 20px;
+            background: #0f172a;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        #output {
-            padding: 15px;
-            color: #00ff41; /* Цвет классического терминала */
-            font-size: 0.95rem;
-            white-space: pre-wrap;
+        #console-output {
+            padding: 20px;
+            color: #38bdf8;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
             overflow-y: auto;
             flex: 1;
         }
 
         /* Скроллбары */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
-
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
     </style>
 </head>
 <body onload="brython()">
 
     <header>
-        <h1>PYTHON // PRO-LEARNER</h1>
-        <button class="run-button" onclick="runPython()">Выполнить код</button>
+        <div class="logo">PYTHON ACADEMY // STUDIO PRO</div>
+        <div class="controls">
+            <span style="font-size: 0.8rem; color: #64748b;">v4.0.2 Stable</span>
+            <button class="btn-execute" onclick="runProject()">RUN PROJECT</button>
+        </div>
     </header>
 
-    <div class="main-layout">
-        <aside class="tutorial-sidebar">
-            <div class="sidebar-header">
-                <h2>📚 КУРС МОЛОДОГО БОЙЦА</h2>
+    <div class="app-container">
+        <aside class="academy-sidebar">
+            <div class="sidebar-nav">
+                <h2>Учебная программа</h2>
+                <p>Ваш прогресс: 12% завершено</p>
             </div>
-            <div class="tutorial-content">
-                
-                <div class="lesson-card">
-                    <h3>01. Вывод данных</h3>
-                    <p>Используй <b>print()</b>, чтобы вывести что угодно в консоль справа.</p>
-                    <code>print("Система активна")</code>
+            <div class="lesson-list">
+                <div class="lesson-node">
+                    <h4><span>01</span> Основы синтаксиса</h4>
+                    <p>Изучите структуру Python-скрипта и базовые функции вывода данных через print().</p>
                 </div>
-
-                <div class="lesson-card">
-                    <h3>02. Переменные</h3>
-                    <p>Это хранилища для данных. Числа пишутся просто так, текст — в кавычках.</p>
-                    <code>power = 100<br>status = "Online"</code>
+                <div class="lesson-node">
+                    <h4><span>02</span> Логические структуры</h4>
+                    <p>Работа с операторами if, elif и else для создания ветвлений в коде.</p>
                 </div>
-
-                <div class="lesson-card">
-                    <h3>03. Списки (Массивы)</h3>
-                    <p>Позволяют хранить набор элементов под одним именем.</p>
-                    <code>tools = ["Браузер", "IDE", "Git"]<br>print(tools[0])</code>
+                <div class="lesson-node">
+                    <h4><span>03</span> Циклы и итерации</h4>
+                    <p>Масштабирование задач с помощью for и while. Обработка списков данных.</p>
                 </div>
-
-                <div class="lesson-card">
-                    <h3>04. Условия</h3>
-                    <p>Если условие верно — выполняется один код, иначе — другой.</p>
-                    <code>if power > 50:<br>&nbsp;&nbsp;print("Работаем")<br>else:<br>&nbsp;&nbsp;print("Зарядка!")</code>
+                <div class="lesson-node">
+                    <h4><span>04</span> Функции и модули</h4>
+                    <p>Инкапсуляция логики и создание переиспользуемых блоков кода.</p>
                 </div>
-
-                <div class="lesson-card">
-                    <h3>05. Циклы (Loops)</h3>
-                    <p>Повторяют код несколько раз. Цикл <b>for</b> идеален для перебора данных.</p>
-                    <code>for x in range(5):<br>&nbsp;&nbsp;print(f"Шаг №{x}")</code>
-                </div>
-
-                <div class="lesson-card">
-                    <h3>06. Функции</h3>
-                    <p>Группируют код в блок, который можно вызвать по имени.</p>
-                    <code>def start():<br>&nbsp;&nbsp;return "Запуск..."<br><br>print(start())</code>
-                </div>
-
             </div>
         </aside>
 
-        <main class="editor-container">
-            <div id="code-editor"># Добро пожаловать!
-# 1. Посмотри уроки слева
-# 2. Напиши код здесь
-# 3. Нажми кнопку ВЫПОЛНИТЬ
+        <main class="workspace">
+            <div id="editor-surface"># Python Academy Studio Pro
+# -----------------------------
+# Начните программировать здесь
 
-def welcome():
-    name = "Программист"
-    print(f"Привет, {name}!")
-    print("Твой терминал готов к работе.")
+class AcademyRobot:
+    def __init__(self, name):
+        self.name = name
+    
+    def greet(self):
+        return f"Система {self.name} активирована и готова к работе."
 
-welcome()
+bot = AcademyRobot("Studio_Pro_v4")
+print(bot.greet())
 
-# Попробуй создать цикл:
-for i in range(3):
-    print(f"Счетчик: {i}")
+# Попробуйте изменить код и нажать RUN PROJECT
 </div>
-            <div class="console-area">
-                <div class="console-header">Системный вывод (Console)</div>
-                <div id="output">Нажмите 'Выполнить код'...</div>
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <span>Debug Console</span>
+                    <span style="color: #22c55e;">● Live</span>
+                </div>
+                <div id="console-output">Ожидание запуска...</div>
             </div>
         </main>
     </div>
 
     <script>
-        // Настройка редактора Ace
-        var editor = ace.edit("code-editor");
-        editor.setTheme("ace/theme/cobalt"); // Синяя тема
+        var editor = ace.edit("editor-surface");
+        editor.setTheme("ace/theme/tomorrow_night_eighties");
         editor.session.setMode("ace/mode/python");
         editor.setOptions({
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            showPrintMargin: false,
+            fontSize: "15px",
+            showGutter: true,
             highlightActiveLine: true,
+            wrap: true,
+            useSoftTabs: true,
             tabSize: 4
         });
 
-        // Функция запуска
-        function runPython() {
-            document.getElementById('output').innerHTML = ""; // Очистка
-            // Вызываем событие клика для Brython
-            const event = new CustomEvent('run-python');
+        function runProject() {
+            document.getElementById('console-output').innerHTML = "";
+            const event = new CustomEvent('execute-python');
             document.dispatchEvent(event);
         }
     </script>
@@ -289,20 +288,20 @@ for i in range(3):
         from browser import document, window, bind
         import sys
 
-        def write_to_output(data):
-            document["output"].text += str(data)
+        def output_handler(data):
+            document["console-output"].text += str(data)
 
-        sys.stdout.write = write_to_output
-        sys.stderr.write = write_to_output
+        sys.stdout.write = output_handler
+        sys.stderr.write = output_handler
 
-        @bind(document, "run-python")
-        def execute(ev):
-            document["output"].text = ""
-            code = window.editor.getValue()
+        @bind(document, "execute-python")
+        def run(ev):
+            document["console-output"].text = ""
+            source_code = window.editor.getValue()
             try:
-                exec(code, {})
-            except Exception as e:
-                document["output"].text += f"\nОШИБКА: {e}"
+                exec(source_code, {})
+            except Exception as err:
+                document["console-output"].text += f"\n[ERROR]: {err}"
     </script>
 </body>
 </html>
