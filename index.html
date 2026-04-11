@@ -3,284 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Academy Studio Pro</title>
+    <title>Python Academy Studio Pro // Ultimate</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.11.2/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython_stdlib.min.js"></script>
     
     <style>
         :root {
-            --bg-deep: #020408;
-            --bg-surface: #0a0f1d;
-            --accent-glow: #0070f3;
+            --bg-deep: #010204;
+            --bg-card: #0d1117;
+            --accent: #0070f3;
+            --accent-glow: rgba(0, 112, 243, 0.4);
             --neon-cyan: #00d4ff;
-            --glass: rgba(15, 23, 42, 0.8);
-            --border: rgba(255, 255, 255, 0.1);
+            --error: #ff4d4d;
+            --success: #00ff88;
+            --text-main: #e6edf3;
+            --text-dim: #7d8590;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
             background-color: var(--bg-deep);
-            color: #e2e8f0;
+            color: var(--text-main);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Навигация Studio Pro */
+        /* --- Header --- */
         header {
-            height: 70px;
-            background: var(--glass);
-            backdrop-filter: blur(12px);
+            height: 64px;
+            background: rgba(1, 2, 4, 0.8);
+            backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 40px;
+            padding: 0 24px;
             border-bottom: 1px solid var(--border);
-            z-index: 100;
+            z-index: 1000;
         }
 
-        .logo {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--neon-cyan));
+            border-radius: 8px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .brand h1 {
+            font-size: 1.1rem;
             font-weight: 800;
-            font-size: 1.4rem;
-            background: linear-gradient(to right, #0070f3, #00d4ff);
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #fff, #888);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
         }
 
-        .controls {
+        .top-tools {
             display: flex;
-            gap: 20px;
-            align-items: center;
+            gap: 12px;
         }
 
-        .btn-execute {
-            background: linear-gradient(135deg, #0070f3 0%, #0051af 100%);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 8px;
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
-        }
-
-        .btn-execute:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 118, 255, 0.5);
-        }
-
-        /* Рабочая область */
-        .app-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            padding: 10px;
-            gap: 10px;
-        }
-
-        /* Сайдбар с уроками */
-        .academy-sidebar {
-            width: 400px;
-            background: var(--bg-surface);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .sidebar-nav {
-            padding: 25px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-nav h2 {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-nav p {
-            font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .lesson-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .lesson-node {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 15px;
-            border: 1px solid transparent;
             transition: 0.2s;
-        }
-
-        .lesson-node:hover {
-            border-color: var(--accent-glow);
-            background: rgba(0, 112, 243, 0.05);
-        }
-
-        .lesson-node h4 {
-            color: var(--neon-cyan);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .lesson-node p {
-            font-size: 0.85rem;
-            line-height: 1.5;
-            color: #94a3b8;
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        /* Секция кода */
-        .workspace {
-            flex: 1;
+        .btn-primary:hover {
+            background: #0061d1;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* --- Main Layout --- */
+        .main-view {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #editor-surface {
-            flex: 2;
-            border-radius: 16px;
+            flex: 1;
             overflow: hidden;
-            border: 1px solid var(--border);
+            padding: 12px;
+            gap: 12px;
         }
 
-        .terminal-container {
-            flex: 1;
-            background: #000;
-            border-radius: 16px;
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            background: var(--bg-card);
+            border-radius: 12px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
         }
 
-        .terminal-header {
-            padding: 12px 20px;
-            background: #0f172a;
-            font-size: 0.75rem;
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lesson-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .lesson-card {
+            padding: 14px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .lesson-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: var(--accent);
+        }
+
+        .lesson-card h4 {
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            margin-bottom: 6px;
+        }
+
+        .lesson-card p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Editor Area */
+        .editor-stack {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #editor {
+            flex: 1;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .console-box {
+            height: 30%;
+            background: #000;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .console-nav {
+            padding: 8px 16px;
+            background: #0d1117;
+            font-size: 0.7rem;
+            color: var(--text-dim);
             font-weight: 700;
-            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 1px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
-        #console-output {
-            padding: 20px;
-            color: #38bdf8;
+        #output {
+            padding: 16px;
             font-family: 'Fira Code', monospace;
             font-size: 0.9rem;
+            color: var(--success);
             overflow-y: auto;
+            white-space: pre-wrap;
             flex: 1;
         }
 
-        /* Скроллбары */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        /* --- Footer / Status Bar --- */
+        footer {
+            height: 28px;
+            background: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status-item {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .running-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            display: none;
+            animation: pulse 1s infinite;
+        }
     </style>
 </head>
-<body onload="brython()">
+<body onload="initApp()">
 
     <header>
-        <div class="logo">PYTHON ACADEMY // STUDIO PRO</div>
-        <div class="controls">
-            <span style="font-size: 0.8rem; color: #64748b;">v4.0.2 Stable</span>
-            <button class="btn-execute" onclick="runProject()">RUN PROJECT</button>
+        <div class="brand">
+            <div class="logo-box"></div>
+            <h1>PYTHON ACADEMY // STUDIO PRO</h1>
+        </div>
+        <div class="top-tools">
+            <button class="btn btn-secondary" onclick="clearAll()">CLEAR</button>
+            <button class="btn btn-secondary" onclick="shareCode()">SHARE</button>
+            <button class="btn btn-primary" onclick="runPython()">RUN PROJECT (Ctrl+Enter)</button>
         </div>
     </header>
 
-    <div class="app-container">
-        <aside class="academy-sidebar">
-            <div class="sidebar-nav">
-                <h2>Учебная программа</h2>
-                <p>Ваш прогресс: 12% завершено</p>
+    <div class="main-view">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Curriculum</h3>
+                <p style="font-size: 0.75rem; color: var(--text-dim)">Кликните на урок для загрузки кода</p>
             </div>
-            <div class="lesson-list">
-                <div class="lesson-node">
-                    <h4><span>01</span> Основы синтаксиса</h4>
-                    <p>Изучите структуру Python-скрипта и базовые функции вывода данных через print().</p>
+            <div class="lesson-scroll">
+                <div class="lesson-card" onclick="loadSnippet('print')">
+                    <h4>01. Hello World</h4>
+                    <p>Базовый вывод данных и работа с консолью.</p>
                 </div>
-                <div class="lesson-node">
-                    <h4><span>02</span> Логические структуры</h4>
-                    <p>Работа с операторами if, elif и else для создания ветвлений в коде.</p>
+                <div class="lesson-card" onclick="loadSnippet('loop')">
+                    <h4>02. Iteration Cycles</h4>
+                    <p>Использование циклов for для автоматизации задач.</p>
                 </div>
-                <div class="lesson-node">
-                    <h4><span>03</span> Циклы и итерации</h4>
-                    <p>Масштабирование задач с помощью for и while. Обработка списков данных.</p>
+                <div class="lesson-card" onclick="loadSnippet('logic')">
+                    <h4>03. Smart Logic</h4>
+                    <p>Условные операторы и принятие решений в коде.</p>
                 </div>
-                <div class="lesson-node">
-                    <h4><span>04</span> Функции и модули</h4>
-                    <p>Инкапсуляция логики и создание переиспользуемых блоков кода.</p>
+                <div class="lesson-card" onclick="loadSnippet('func')">
+                    <h4>04. Function Blocks</h4>
+                    <p>Создание переиспользуемых модулей и аргументов.</p>
                 </div>
             </div>
         </aside>
 
-        <main class="workspace">
-            <div id="editor-surface"># Python Academy Studio Pro
-# -----------------------------
-# Начните программировать здесь
-
-class AcademyRobot:
-    def __init__(self, name):
-        self.name = name
-    
-    def greet(self):
-        return f"Система {self.name} активирована и готова к работе."
-
-bot = AcademyRobot("Studio_Pro_v4")
-print(bot.greet())
-
-# Попробуйте изменить код и нажать RUN PROJECT
-</div>
-            <div class="terminal-container">
-                <div class="terminal-header">
-                    <span>Debug Console</span>
-                    <span style="color: #22c55e;">● Live</span>
+        <main class="editor-stack">
+            <div id="editor"></div>
+            <div class="console-box">
+                <div class="console-nav">
+                    <span>Debug Output</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="running-dot" id="dot"></div>
+                        <span id="status-text">Ready</span>
+                    </div>
                 </div>
-                <div id="console-output">Ожидание запуска...</div>
+                <div id="output">System initialized...</div>
             </div>
         </main>
     </div>
 
-    <script>
-        var editor = ace.edit("editor-surface");
-        editor.setTheme("ace/theme/tomorrow_night_eighties");
-        editor.session.setMode("ace/mode/python");
-        editor.setOptions({
-            fontSize: "15px",
-            showGutter: true,
-            highlightActiveLine: true,
-            wrap: true,
-            useSoftTabs: true,
-            tabSize: 4
-        });
+    <footer>
+        <div class="status-item">
+            <span id="cursor-pos">Ln 1, Col 1</span>
+            <span id="char-count">Chars: 0</span>
+        </div>
+        <div>UTF-8 // Brython 3.11 // Studio Pro Engine</div>
+    </footer>
 
-        function runProject() {
-            document.getElementById('console-output').innerHTML = "";
-            const event = new CustomEvent('execute-python');
-            document.dispatchEvent(event);
+    <script>
+        let editor;
+        const snippets = {
+            'print': 'print("Hello from Studio Pro!")\n# Это твой первый шаг.',
+            'loop': 'for i in range(1, 6):\n    print(f"Итерация номер: {i}")',
+            'logic': 'age = 18\nif age >= 18:\n    print("Доступ разрешен")\nelse:\n    print("Отказ в доступе")',
+            'func': 'def greet(user):\n    return f"Welcome, {user}!"\n\nprint(greet("Developer"))'
+        };
+
+        function initApp() {
+            brython();
+            
+            editor = ace.edit("editor");
+            editor.setTheme("ace/theme/tomorrow_night_eighties");
+            editor.session.setMode("ace/mode/python");
+            
+            // Восстановление кода из LocalStorage или URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedCode = urlParams.get('code');
+            
+            if (sharedCode) {
+                editor.setValue(atob(sharedCode));
+            } else {
+                const saved = localStorage.getItem('pro_studio_code');
+                if (saved) editor.setValue(saved);
+                else editor.setValue("# Начни свой проект здесь...\nprint('Studio Pro Ready')");
+            }
+
+            editor.setOptions({
+                fontSize: "15px",
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true
+            });
+
+            // Слушатели событий
+            editor.session.on('change', () => {
+                localStorage.setItem('pro_studio_code', editor.getValue());
+                updateStats();
+            });
+
+            editor.selection.on('changeCursor', updateStats);
+
+            // Горячие клавиши
+            editor.commands.addCommand({
+                name: 'run',
+                bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+                exec: runPython
+            });
+            
+            updateStats();
+        }
+
+        function updateStats() {
+            const cursor = editor.getCursorPosition();
+            document.getElementById('cursor-pos').innerText = `Ln ${cursor.row + 1}, Col ${cursor.column + 1}`;
+            document.getElementById('char-count').innerText = `Chars: ${editor.getValue().length}`;
+        }
+
+        function loadSnippet(id) {
+            if(confirm("Загрузить новый урок? Текущий код будет заменен.")) {
+                editor.setValue(snippets[id]);
+            }
+        }
+
+        function clearAll() {
+            editor.setValue("");
+            document.getElementById('output').innerText = "";
+        }
+
+        function shareCode() {
+            const code = btoa(editor.getValue());
+            const url = window.location.origin + window.location.pathname + '?code=' + code;
+            navigator.clipboard.writeText(url);
+            alert("Ссылка скопирована! Отправьте её коллеге.");
+        }
+
+        function runPython() {
+            document.getElementById('dot').style.display = 'block';
+            document.getElementById('status-text').innerText = 'Running...';
+            document.getElementById('output').innerText = "";
+            
+            setTimeout(() => {
+                const event = new CustomEvent('exec-py');
+                document.dispatchEvent(event);
+                document.getElementById('dot').style.display = 'none';
+                document.getElementById('status-text').innerText = 'Ready';
+            }, 100);
         }
     </script>
 
@@ -288,20 +410,19 @@ print(bot.greet())
         from browser import document, window, bind
         import sys
 
-        def output_handler(data):
-            document["console-output"].text += str(data)
+        def write_out(data):
+            document["output"].text += str(data)
 
-        sys.stdout.write = output_handler
-        sys.stderr.write = output_handler
+        sys.stdout.write = write_out
+        sys.stderr.write = write_out
 
-        @bind(document, "execute-python")
-        def run(ev):
-            document["console-output"].text = ""
-            source_code = window.editor.getValue()
+        @bind(document, "exec-py")
+        def run_code(ev):
+            src = window.editor.getValue()
             try:
-                exec(source_code, {})
-            except Exception as err:
-                document["console-output"].text += f"\n[ERROR]: {err}"
+                exec(src, {})
+            except Exception as e:
+                document["output"].text += f"\n[CRITICAL ERROR]: {e}"
     </script>
 </body>
 </html>
