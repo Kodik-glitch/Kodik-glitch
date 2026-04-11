@@ -3,227 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Web IDE</title>
+    <title>Python Dark Learning IDE</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.11.2/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython_stdlib.min.js"></script>
     
     <style>
+        /* Палитра: Black & Neon Blue */
         :root {
-            --bg-main: #0A192F; /* Темно-синий фон */
-            --bg-panel: #112240; /* Фон панелей */
-            --text-main: #CCD6F6; /* Светлый текст */
-            --accent: #4A90E2; /* Голубой акцент */
-            --accent-hover: #357ABD;
+            --bg-black: #000000;
+            --bg-dark-blue: #020b1a;
+            --accent-blue: #007bff;
+            --neon-blue: #00f2ff;
+            --text-gray: #a0a0a0;
+            --text-white: #e0e0e0;
+            --border-color: #003366;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            overflow: hidden;
         }
 
+        /* Шапка сайта */
         header {
-            background-color: var(--bg-panel);
-            padding: 15px 20px;
+            height: 60px;
+            background: linear-gradient(90deg, #000 0%, #001a33 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--accent);
+            padding: 0 25px;
+            border-bottom: 2px solid var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+            z-index: 10;
         }
 
         header h1 {
-            font-size: 1.5rem;
-            color: var(--accent);
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
         }
 
-        .btn-run {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
+        .run-button {
+            background-color: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            padding: 8px 25px;
             font-weight: bold;
-            transition: background 0.2s;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+            text-transform: uppercase;
         }
 
-        .btn-run:hover {
-            background-color: var(--accent-hover);
+        .run-button:hover {
+            background-color: var(--neon-blue);
+            color: var(--bg-black);
+            box-shadow: 0 0 20px var(--neon-blue);
         }
 
-        .container {
+        /* Основной контейнер */
+        .main-layout {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
 
-        .sidebar {
-            width: 300px;
-            background-color: var(--bg-panel);
-            padding: 20px;
-            overflow-y: auto;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar h2 {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            color: var(--accent);
-        }
-
-        .doc-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .doc-item code {
-            display: block;
-            background: #000;
-            padding: 5px;
-            margin-top: 5px;
-            border-radius: 3px;
-            color: #4CAF50;
-            font-family: monospace;
-        }
-
-        .editor-section {
-            flex: 1;
+        /* Левая панель - Учебник */
+        .tutorial-sidebar {
+            width: 380px;
+            background-color: var(--bg-dark-blue);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
         }
 
-        #editor {
-            flex: 2;
-            font-size: 16px;
+        .sidebar-header {
+            padding: 20px;
+            background: rgba(0, 123, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .output-section {
+        .sidebar-header h2 {
+            color: var(--neon-blue);
+            font-size: 1.1rem;
+        }
+
+        .tutorial-content {
             flex: 1;
-            background-color: #020c1b;
-            padding: 15px;
-            border-top: 2px solid var(--bg-panel);
             overflow-y: auto;
+            padding: 15px;
         }
 
-        .output-section h3 {
+        .lesson-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-card h3 {
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .lesson-card p {
+            font-size: 0.85rem;
+            color: var(--text-gray);
             margin-bottom: 10px;
-            color: #8892b0;
+            line-height: 1.5;
+        }
+
+        .lesson-card code {
+            display: block;
+            background: #000;
+            padding: 8px;
+            color: #4da6ff;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            border: 1px solid #002244;
+        }
+
+        /* Правая часть - Редактор и Консоль */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-black);
+        }
+
+        #code-editor {
+            flex: 1.5;
+            font-size: 15px;
+        }
+
+        .console-area {
+            flex: 1;
+            border-top: 2px solid var(--accent-blue);
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .console-header {
+            padding: 8px 15px;
+            background: #051020;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
         }
 
         #output {
-            font-family: monospace;
+            padding: 15px;
+            color: #00ff41; /* Цвет классического терминала */
+            font-size: 0.95rem;
             white-space: pre-wrap;
-            color: #a8b2d1;
+            overflow-y: auto;
+            flex: 1;
         }
+
+        /* Скроллбары */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
     </style>
 </head>
 <body onload="brython()">
 
     <header>
-        <h1>Python Web IDE</h1>
-        <button class="btn-run" id="run-btn">▶ Запустить код</button>
+        <h1>PYTHON // PRO-LEARNER</h1>
+        <button class="run-button" onclick="runPython()">Выполнить код</button>
     </header>
 
-    <div class="container">
-        <div class="sidebar">
-            <h2>Справочник Python</h2>
-            
-            <div class="doc-item">
-                <strong>Вывод текста</strong>
-                <code>print("Hello, World!")</code>
+    <div class="main-layout">
+        <aside class="tutorial-sidebar">
+            <div class="sidebar-header">
+                <h2>📚 КУРС МОЛОДОГО БОЙЦА</h2>
             </div>
-            
-            <div class="doc-item">
-                <strong>Переменные и математика</strong>
-                <code>a = 5<br>b = 10<br>print(a + b)</code>
+            <div class="tutorial-content">
+                
+                <div class="lesson-card">
+                    <h3>01. Вывод данных</h3>
+                    <p>Используй <b>print()</b>, чтобы вывести что угодно в консоль справа.</p>
+                    <code>print("Система активна")</code>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>02. Переменные</h3>
+                    <p>Это хранилища для данных. Числа пишутся просто так, текст — в кавычках.</p>
+                    <code>power = 100<br>status = "Online"</code>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>03. Списки (Массивы)</h3>
+                    <p>Позволяют хранить набор элементов под одним именем.</p>
+                    <code>tools = ["Браузер", "IDE", "Git"]<br>print(tools[0])</code>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>04. Условия</h3>
+                    <p>Если условие верно — выполняется один код, иначе — другой.</p>
+                    <code>if power > 50:<br>&nbsp;&nbsp;print("Работаем")<br>else:<br>&nbsp;&nbsp;print("Зарядка!")</code>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>05. Циклы (Loops)</h3>
+                    <p>Повторяют код несколько раз. Цикл <b>for</b> идеален для перебора данных.</p>
+                    <code>for x in range(5):<br>&nbsp;&nbsp;print(f"Шаг №{x}")</code>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>06. Функции</h3>
+                    <p>Группируют код в блок, который можно вызвать по имени.</p>
+                    <code>def start():<br>&nbsp;&nbsp;return "Запуск..."<br><br>print(start())</code>
+                </div>
+
             </div>
+        </aside>
 
-            <div class="doc-item">
-                <strong>Условия (if/else)</strong>
-                <code>age = 18<br>if age >= 18:<br>&nbsp;&nbsp;print("Доступ открыт")<br>else:<br>&nbsp;&nbsp;print("Рано!")</code>
-            </div>
+        <main class="editor-container">
+            <div id="code-editor"># Добро пожаловать!
+# 1. Посмотри уроки слева
+# 2. Напиши код здесь
+# 3. Нажми кнопку ВЫПОЛНИТЬ
 
-            <div class="doc-item">
-                <strong>Цикл For</strong>
-                <code>for i in range(3):<br>&nbsp;&nbsp;print(i)</code>
-            </div>
+def welcome():
+    name = "Программист"
+    print(f"Привет, {name}!")
+    print("Твой терминал готов к работе.")
 
-            <div class="doc-item">
-                <strong>Функции</strong>
-                <code>def greet(name):<br>&nbsp;&nbsp;return f"Hi, {name}"<br>print(greet("Bob"))</code>
-            </div>
-            
-            </div>
+welcome()
 
-        <div class="editor-section">
-            <div id="editor"># Напиши свой Python код здесь
-print("Добро пожаловать в Python Web IDE!")
-
-def calculate_area(radius):
-    pi = 3.14159
-    return pi * (radius ** 2)
-
-print(f"Площадь круга с радиусом 5: {calculate_area(5)}")
+# Попробуй создать цикл:
+for i in range(3):
+    print(f"Счетчик: {i}")
 </div>
-            <div class="output-section">
-                <h3>Консоль вывода:</h3>
-                <pre id="output"></pre>
+            <div class="console-area">
+                <div class="console-header">Системный вывод (Console)</div>
+                <div id="output">Нажмите 'Выполнить код'...</div>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/tomorrow_night_eighties");
+        // Настройка редактора Ace
+        var editor = ace.edit("code-editor");
+        editor.setTheme("ace/theme/cobalt"); // Синяя тема
         editor.session.setMode("ace/mode/python");
         editor.setOptions({
             enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true
+            enableLiveAutocompletion: true,
+            showPrintMargin: false,
+            highlightActiveLine: true,
+            tabSize: 4
         });
-        window.editor = editor; // делаем доступным для Brython
+
+        // Функция запуска
+        function runPython() {
+            document.getElementById('output').innerHTML = ""; // Очистка
+            // Вызываем событие клика для Brython
+            const event = new CustomEvent('run-python');
+            document.dispatchEvent(event);
+        }
     </script>
 
     <script type="text/python">
-        from browser import document, window
+        from browser import document, window, bind
         import sys
-        import traceback
 
-        def run_code(ev):
-            # Очищаем консоль
+        def write_to_output(data):
+            document["output"].text += str(data)
+
+        sys.stdout.write = write_to_output
+        sys.stderr.write = write_to_output
+
+        @bind(document, "run-python")
+        def execute(ev):
             document["output"].text = ""
-            
-            # Перехватываем стандартный вывод (print)
-            class MyOutput:
-                def write(self, data):
-                    document["output"].text += str(data)
-            
-            sys.stdout = MyOutput()
-            sys.stderr = MyOutput()
-            
-            # Получаем код из редактора
-            src = window.editor.getValue()
-            
-            # Выполняем код
+            code = window.editor.getValue()
             try:
-                exec(src, {})
-            except Exception as exc:
-                traceback.print_exc(file=sys.stderr)
-
-        document["run-btn"].bind("click", run_code)
+                exec(code, {})
+            except Exception as e:
+                document["output"].text += f"\nОШИБКА: {e}"
     </script>
 </body>
 </html>
